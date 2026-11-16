@@ -24,12 +24,21 @@ def settings():
         return redirect(url_for('auth.login'))
 
     user = User.query.get(session['user_id'])
+    print("GROUP ID FROM DATABASE:", repr(user.vk_group_id))
 
     if request.method == 'POST':
-        user.vk_api_id = request.form['vk_api_id']
-        user.vk_group_id = request.form['vk_group_id']
-        db.session.commit()
-        flash('Settings saved!', 'success')
+        vk_api_id = request.form.get('vk_api_id', '').strip()
+        vk_group_id = request.form.get('vk_group_id', '').strip()
+        print("GROUP ID FROM FORM:", repr(vk_group_id))
+
+        if not vk_api_id or not vk_group_id:
+            flash('Please fill in both VK fields.', 'danger')
+        else:
+            user.vk_api_id = vk_api_id
+            user.vk_group_id = vk_group_id
+            db.session.commit()
+            flash('Settings saved!', 'success')
+            return redirect(url_for('smm.settings'))
 
     return render_template('settings.html', user=user)
 
