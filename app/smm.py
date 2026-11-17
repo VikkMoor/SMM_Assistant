@@ -1,3 +1,6 @@
+
+from datetime import datetime, timedelta
+
 from flask import Blueprint, render_template, request, flash, session, redirect, url_for
 from app.models import User
 from app import db
@@ -24,12 +27,10 @@ def settings():
         return redirect(url_for('auth.login'))
 
     user = User.query.get(session['user_id'])
-    print("GROUP ID FROM DATABASE:", repr(user.vk_group_id))
 
     if request.method == 'POST':
         vk_api_id = request.form.get('vk_api_id', '').strip()
         vk_group_id = request.form.get('vk_group_id', '').strip()
-        print("GROUP ID FROM FORM:", repr(vk_group_id))
 
         if not vk_api_id or not vk_group_id:
             flash('Please fill in both VK fields.', 'danger')
@@ -70,7 +71,11 @@ def post_generator():
             vk_publisher.publish_post(post_content, image_url)
             flash('Post published to VK successfully!', 'success')
 
-        return render_template('post_generator.html', post_content=post_content, image_url=image_url)
+        return render_template(
+            'post_generator.html',
+            post_content=post_content,
+            image_url=image_url
+        )
 
     return render_template('post_generator.html')
 
@@ -84,12 +89,22 @@ def vk_stats():
 
     vk_stats = VKStats(user.vk_api_id, user.vk_group_id)
     followers_count = vk_stats.get_followers()
+    posts_stats = vk_stats.get_posts_stats()
+
+    end_date = datetime.now().strftime('%Y-%m-%d')
+    start_date = (datetime.now() - timedelta(days=7)).strftime('%Y-%m-%d')
+
+    community_stats = vk_stats.get_stats(start_date, end_date)
 
     stats = {
         "Followers": followers_count,
-        "Likes": "N/A",
-        "Comments": "N/A",
-        "Shares": "N/A"
+        "Reach": community_stats.get('reach', {}).get('reach', 0),
+        "Reach of subscribers": community_stats.get('reach', {}).get('reach_subscribers', 0),
+        "Visitors": community_stats.get('visitors', {}).get('visitors', 0),
+        "Views": community_stats.get('visitors', {}).get('views', 0),
+        "Comments": community_stats.get('activity', {}).get('comments', 0),
+        "Likes": posts_stats.get('likes', 0),
+        "Reposts": posts_stats.get('reposts', 0)
     }
 
     return render_template('vk_stats.html', stats=stats)

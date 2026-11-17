@@ -1,21 +1,40 @@
+
 {% extends "base.html" %}
-{% block title %}VK Stats{% endblock %}
+
+{% block title %}Статистика ВКонтакте{% endblock %}
+
 {% block content %}
-<h1 class="text-center">VK Stats</h1>
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>Parameter</th>
-            <th>Value</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for key, value in stats.items() %}
-        <tr>
-            <td>{{ key }}</td>
-            <td>{{ value }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="container mt-4">
+    <h1 class="text-center mb-4">Статистика сообщества ВКонтакте</h1>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>Показатель</th>
+                    <th>Значение</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for key, value in stats.items() %}
+                <tr>
+                    <td>
+                        {% if key == 'Followers' %}Подписчики
+                        {% elif key == 'Reach' %}Охват
+                        {% elif key == 'Reach of subscribers' %}Охват подписчиков
+                        {% elif key == 'Visitors' %}Посетители
+                        {% elif key == 'Views' %}Просмотры
+                        {% elif key == 'Comments' %}Комментарии
+                        {% elif key == 'Likes' %}Лайки
+                        {% elif key == 'Reposts' %}Репосты
+                        {% else %}{{ key }}
+                        {% endif %}
+                    </td>
+                    <td class="fw-bold">{{ value }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 {% endblock %}
