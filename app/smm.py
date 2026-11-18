@@ -57,28 +57,32 @@ def post_generator():
 
         user = User.query.get(session['user_id'])
 
-        post_gen = PostGenerator(openai_key, tone, topic)
-        post_content = post_gen.generate_post()
+        try:
+            post_gen = PostGenerator(openai_key, tone, topic)
+            post_content = post_gen.generate_post()
 
-        image_url = None
-        if generate_image:
-            image_gen = ImageGenerator(openai_key)
-            image_prompt = post_gen.generate_post_image_description()
-            image_url = image_gen.generate_image(image_prompt)
+            image_url = None
+            if generate_image:
+                image_gen = ImageGenerator(openai_key)
+                image_prompt = post_gen.generate_post_image_description()
+                image_url = image_gen.generate_image(image_prompt)
 
-        if auto_post:
-            vk_publisher = VKPublisher(user.vk_api_id, user.vk_group_id)
-            vk_publisher.publish_post(post_content, image_url)
-            flash('Post published to VK successfully!', 'success')
+            if auto_post:
+                vk_publisher = VKPublisher(user.vk_api_id, user.vk_group_id)
+                vk_publisher.publish_post(post_content, image_url)
+                flash('Публикация успешно размещена во ВКонтакте!', 'success')
 
-        return render_template(
-            'post_generator.html',
-            post_content=post_content,
-            image_url=image_url
-        )
+            return render_template(
+                'post_generator.html',
+                post_content=post_content,
+                image_url=image_url
+            )
+
+        except Exception as e:
+            flash(str(e), 'danger')
+            return render_template('post_generator.html')
 
     return render_template('post_generator.html')
-
 
 @smm_bp.route('/vk-stats', methods=['GET'])
 def vk_stats():
