@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-openai_key = os.getenv("OPENAI_API_KEY", "")
+fernet_key = os.getenv("FERNET_KEY", "")
 
 # VK
 vk_api_key = os.getenv("VK_API_KEY", "")

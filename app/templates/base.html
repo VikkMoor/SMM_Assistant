@@ -10,150 +10,251 @@
 
     <style>        
         :root {
-            --bg-main: #DCE8EF;
-            --bg-card: #F5F8FA;
-            --bg-nav: #C4D7E3;
-            --accent: #718FA5;
-            --accent-hover: #5D7C93;
-            --green: #718B85;
-            --green-hover: #5E766F;
-            --text-main: #354957;
-            --text-muted: #627887;
-            --border: #C3D3DD;
-        }
+            --bg-main: #171B26;
+            --bg-card: #222938;
+            --bg-nav: #111722;
+            --bg-input: #191F2C;
 
+            --accent: #8298D8;
+            --accent-hover: #9AADEB;
+
+            --green: #52677F;
+            --green-hover: #607991;
+
+            --text-main: #E5EAF4;
+            --text-muted: #A0ABC0;
+            --border: #354158;
+        
+            --shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+        }
 
         body {
             background-color: var(--bg-main);
             color: var(--text-main);
             font-family: Arial, sans-serif;
+            min-height: 100vh;
         }
 
         .navbar {
             background-color: var(--bg-nav) !important;
-            box-shadow: 0 2px 8px rgba(80, 65, 50, 0.06);
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.25);
+            border-bottom: 1px solid var(--border);
         }
-
+        
         .navbar-brand {
             color: var(--text-main) !important;
             font-weight: 600;
         }
-
+        
+        .navbar-brand small {
+            color: var(--text-muted);
+        }
+        
         .nav-link {
             color: var(--text-muted) !important;
             transition: color 0.2s;
         }
-
+        
         .nav-link:hover {
             color: var(--accent) !important;
         }
-
+        
         h1, h2, h3, h4, h5 {
             color: var(--text-main);
         }
-
+        
         .container {
             padding-bottom: 40px;
         }
-
+        
         .card, .table {
             background-color: var(--bg-card);
-            border-color: var(--border);
-            border-radius: 10px;
+            color: var(--text-main);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
         }
-
+        
         .table {
             overflow: hidden;
         }
-
+        
         .table th {
-            background-color: var(--bg-nav);
+            background-color: #293449;
             color: var(--text-main);
             border-color: var(--border);
         }
-
+        
         .table td {
             border-color: var(--border);
             color: var(--text-main);
         }
-
+        
         .table-striped tbody tr:nth-of-type(odd) {
-            background-color: #EAF1F5;
+            background-color: #283244;
         }
-
-        .form-control {
+        
+        .table-striped tbody tr:nth-of-type(even) {
             background-color: var(--bg-card);
+        }
+        
+        .form-control {
+            background-color: var(--bg-input);
             border: 1px solid var(--border);
             color: var(--text-main);
-            border-radius: 7px;
+            border-radius: 8px;
         }
-
+        
         .form-control:focus {
-            background-color: var(--bg-card);
+            background-color: var(--bg-input);
+            color: var(--text-main);
             border-color: var(--accent);
-            box-shadow: 0 0 0 0.2rem rgba(168, 137, 131, 0.15);
+            box-shadow: 0 0 0 0.2rem rgba(130, 152, 216, 0.2);
         }
 
+        .form-control:-webkit-autofill,
+        .form-control:-webkit-autofill:hover,
+        .form-control:-webkit-autofill:focus,
+        .form-control:-webkit-autofill:active {
+            -webkit-box-shadow: 0 0 0 1000px var(--bg-input) inset !important;
+            -webkit-text-fill-color: var(--text-main) !important;
+            caret-color: var(--text-main);
+            transition: background-color 9999s ease-in-out 0s;
+        }
+                
+        .form-control::placeholder {
+            color: #77839A;
+        }
+        
+        .form-check-label {
+            color: var(--text-main);
+        }
+        
         .btn-primary, .btn-success {
             background-color: var(--green);
             border-color: var(--green);
-            color: white;
+            color: #151B26;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: background-color 0.2s, border-color 0.2s;
         }
 
         .btn-primary:hover, .btn-success:hover {
             background-color: var(--green-hover);
             border-color: var(--green-hover);
+            color: #151B26;
+        }
+
+        .btn-primary:focus, .btn-success:focus {
+            box-shadow: 0 0 0 0.2rem rgba(82, 103, 127, 0.2);
         }
 
         .btn-secondary {
-            background-color: var(--accent);
-            border-color: var(--accent);
+            background-color: #465570;
+            border-color: #465570;
+            color: #E5EAF4;
+            border-radius: 8px;
         }
-
+        
         .btn-secondary:hover {
-            background-color: var(--accent-hover);
-            border-color: var(--accent-hover);
+            background-color: #586A89;
+            border-color: #586A89;
+            color: #FFFFFF;
         }
-
+                
+        
         .alert {
             border-radius: 8px;
         }
-
+        
+        .alert-success {
+            background-color: #243D38;
+            color: #B9E3D2;
+            border-color: #376457;
+        }
+        
+        .alert-danger {
+            background-color: #482B35;
+            color: #F0C3CC;
+            border-color: #75404D;
+        }
+        
+        .alert-warning {
+            background-color: #493D29;
+            color: #F1DDAA;
+            border-color: #75613A;
+        }
+        
+        .alert-info {
+            background-color: #263B52;
+            color: #C2DDF5;
+            border-color: #3D5D7C;
+        }
+        
         a {
             color: var(--accent);
         }
-
+        
         a:hover {
             color: var(--accent-hover);
         }
+        
+        hr {
+            border-color: var(--border);
+        }
+        
+        .text-muted {
+            color: var(--text-muted) !important;
+        }
+        
+        small, .form-text {
+            color: var(--text-muted);
+        }
+        
+        .close {
+            color: var(--text-main);
+            text-shadow: none;
+            opacity: 0.7;
+        }
+        
+        .close:hover {
+            color: #FFFFFF;
+            opacity: 1;
+        }
+        
     </style>
 </head>
 
 <body>
     <nav class="navbar navbar-expand-lg navbar-light">
-        <a class="navbar-brand" href="{{ url_for('smm.dashboard') }}">SMM Assistant</a>
+        <a class="navbar-brand" href="{{ url_for('smm.dashboard') }}">
+            <span class="d-block">SMM VK Assistant</span>
+            <small class="d-block" style="font-size: 11px; font-weight: normal;">
+                ИИ-помощник для публикаций и управления сообществом ВКонтакте
+            </small>
+        </a>
 
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('smm.settings') }}">Settings</a>
+                    <a class="nav-link" href="{{ url_for('smm.settings') }}">Настройки</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('smm.post_generator') }}">Post Generator</a>
+                    <a class="nav-link" href="{{ url_for('smm.post_generator') }}"> Генерация публикаций</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('smm.vk_stats') }}">VK Stats</a>
+                    <a class="nav-link" href="{{ url_for('smm.vk_stats') }}">Статистика ВКонтакте</a>
                 </li>
             </ul>
 
             <ul class="navbar-nav ml-auto">
                 {% if session.get('user_id') %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a>
+                   <a class="nav-link" href="{{ url_for('auth.logout') }}">Выйти</a>
                 </li>
                 {% else %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('auth.login') }}">Login</a>
+                    <a class="nav-link" href="{{ url_for('auth.login') }}">Войти</a>
                 </li>
                 {% endif %}
             </ul>

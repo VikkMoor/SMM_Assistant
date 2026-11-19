@@ -26,3 +26,9 @@ instance/
 # OS
 .DS_Store
 Thumbs.db
+
+# Generated images
+app/static/generated/
+
+# Local tests
+/test_vk_publisher.py

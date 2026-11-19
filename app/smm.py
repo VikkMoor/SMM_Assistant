@@ -1,5 +1,6 @@
 
 from datetime import datetime, timedelta
+from encryption import Encryption
 
 from flask import Blueprint, render_template, request, flash, session, redirect, url_for
 from app.models import User
@@ -8,7 +9,6 @@ from generators.text_gen import PostGenerator
 from generators.image_gen import ImageGenerator
 from social_publishers.vk_publisher import VKPublisher
 from social_stats.vk_stats import VKStats
-from config import openai_key
 
 
 smm_bp = Blueprint('smm', __name__)
@@ -31,23 +31,33 @@ def settings():
     if request.method == 'POST':
         vk_api_id = request.form.get('vk_api_id', '').strip()
         vk_group_id = request.form.get('vk_group_id', '').strip()
+        openai_api_key = request.form.get('openai_api_key', '').strip()
 
         if not vk_api_id or not vk_group_id:
-            flash('Please fill in both VK fields.', 'danger')
+            flash('Заполните оба поля ВКонтакте.', 'danger')
         else:
             user.vk_api_id = vk_api_id
             user.vk_group_id = vk_group_id
+
+            if openai_api_key:
+                encryption = Encryption()
+                user.openai_api_key = encryption.encrypt(openai_api_key)
+
             db.session.commit()
-            flash('Settings saved!', 'success')
+
+            flash('Настройки сохранены!', 'success')
             return redirect(url_for('smm.settings'))
 
     return render_template('settings.html', user=user)
 
 
 @smm_bp.route('/post-generator', methods=['GET', 'POST'])
+
 def post_generator():
     if 'user_id' not in session:
         return redirect(url_for('auth.login'))
+
+    user = User.query.get(session['user_id'])
 
     if request.method == 'POST':
         tone = request.form['tone']
@@ -55,22 +65,38 @@ def post_generator():
         generate_image = 'generate_image' in request.form
         auto_post = 'auto_post' in request.form
 
-        user = User.query.get(session['user_id'])
+        if not user.openai_api_key:
+            flash(
+                'Сначала добавьте OpenAI API Key в настройках.',
+                'danger'
+            )
+            return redirect(url_for('smm.settings'))
 
         try:
-            post_gen = PostGenerator(openai_key, tone, topic)
+            encryption = Encryption()
+            decrypted_api_key = encryption.decrypt(user.openai_api_key)
+
+            post_gen = PostGenerator(decrypted_api_key, tone, topic)
             post_content = post_gen.generate_post()
 
             image_url = None
+            image_path = None
+
             if generate_image:
-                image_gen = ImageGenerator(openai_key)
+                image_gen = ImageGenerator(decrypted_api_key)
                 image_prompt = post_gen.generate_post_image_description()
-                image_url = image_gen.generate_image(image_prompt)
+                image_path = image_gen.generate_image(image_prompt)
+
+                filename = image_path.replace("\\", "/").split("/")[-1]
+                image_url = url_for('static', filename=f'generated/{filename}')
 
             if auto_post:
                 vk_publisher = VKPublisher(user.vk_api_id, user.vk_group_id)
-                vk_publisher.publish_post(post_content, image_url)
-                flash('Публикация успешно размещена во ВКонтакте!', 'success')
+                vk_publisher.publish_post(post_content, image_path)
+                flash(
+                    'Публикация успешно размещена во ВКонтакте!',
+                    'success'
+                )
 
             return render_template(
                 'post_generator.html',
@@ -83,6 +109,7 @@ def post_generator():
             return render_template('post_generator.html')
 
     return render_template('post_generator.html')
+
 
 @smm_bp.route('/vk-stats', methods=['GET'])
 def vk_stats():
