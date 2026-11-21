@@ -7,6 +7,24 @@
 <div class="container mt-4">
     <h1 class="text-center mb-4">Статистика сообщества ВКонтакте</h1>
 
+    {% if not stats %}
+    <div class="stats-empty-state">
+        <div class="stats-empty-icon">📊</div>
+
+        <h3>Статистика пока недоступна</h3>
+
+        <p>
+            Чтобы просматривать статистику сообщества ВКонтакте,
+            сначала укажите токен доступа и ID сообщества
+            в разделе «Настройки».
+        </p>
+
+        <p class="stats-empty-note">
+            После сохранения данных статистика станет доступна.
+        </p>
+    </div>
+
+    {% else %}
     <div class="table-responsive">
         <table class="table table-bordered table-striped">
             <thead class="table-dark">
@@ -36,5 +54,42 @@
             </tbody>
         </table>
     </div>
+    {% endif %}
 </div>
+
+<style>
+.stats-empty-state {
+    max-width: 650px;
+    margin: 55px auto;
+    padding: 40px 30px;
+    text-align: center;
+    background: var(--bg-card, #222938);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    color: #e6eaf2;
+}
+
+.stats-empty-icon {
+    font-size: 42px;
+    margin-bottom: 18px;
+}
+
+.stats-empty-state h3 {
+    font-size: 22px;
+    margin-bottom: 16px;
+    color: #e6eaf2;
+}
+
+.stats-empty-state p {
+    color: #c0c9d8;
+    line-height: 1.6;
+    margin-bottom: 12px;
+}
+
+.stats-empty-state .stats-empty-note {
+    color: #8fa8c8;
+    font-size: 14px;
+    margin-bottom: 0;
+}
+</style>
 {% endblock %}

@@ -111,12 +111,18 @@ def post_generator():
     return render_template('post_generator.html')
 
 
+
 @smm_bp.route('/vk-stats', methods=['GET'])
 def vk_stats():
     if 'user_id' not in session:
         return redirect(url_for('auth.login'))
 
     user = User.query.get(session['user_id'])
+
+    # Проверяем, заполнены ли настройки ВКонтакте
+    if not user or not user.vk_api_id or not str(user.vk_api_id).strip() \
+            or not user.vk_group_id or not str(user.vk_group_id).strip():
+        return render_template('vk_stats.html', stats=None)
 
     vk_stats = VKStats(user.vk_api_id, user.vk_group_id)
     followers_count = vk_stats.get_followers()
@@ -139,3 +145,4 @@ def vk_stats():
     }
 
     return render_template('vk_stats.html', stats=stats)
+
