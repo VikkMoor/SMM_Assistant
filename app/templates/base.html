@@ -229,15 +229,24 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light">
+    <nav class="navbar navbar-expand-lg navbar-dark">
         <a class="navbar-brand" href="{{ url_for('smm.dashboard') }}">
             <span class="d-block">SMM VK Assistant</span>
             <small class="d-block" style="font-size: 11px; font-weight: normal;">
-                ИИ-помощник для публикаций и управления сообществом ВКонтакте
+                 ИИ-помощник для публикаций в ВК
             </small>
         </a>
 
-        <div class="collapse navbar-collapse">
+        <button class="navbar-toggler" type="button"
+                data-toggle="collapse"
+                data-target="#mainNavbar"
+                aria-controls="mainNavbar"
+                aria-expanded="false"
+                aria-label="Открыть меню">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="mainNavbar">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
                     <a class="nav-link" href="{{ url_for('smm.settings') }}">Настройки</a>
